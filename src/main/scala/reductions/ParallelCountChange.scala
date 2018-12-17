@@ -14,7 +14,7 @@ object ParallelCountChangeRunner {
     Key.exec.maxWarmupRuns -> 40,
     Key.exec.benchRuns -> 80,
     Key.verbose -> true
-  ) withWarmer(new Warmer.Default)
+  ) withWarmer (new Warmer.Default)
 
   def main(args: Array[String]): Unit = {
     val amount = 250
@@ -43,8 +43,8 @@ object ParallelCountChangeRunner {
 object ParallelCountChange {
 
   /** Returns the number of ways change can be made from the specified list of
-   *  coins for the specified amount of money.
-   */
+    * coins for the specified amount of money.
+    */
   def countChange(money: Int, coins: List[Int]): Int = {
     ???
   }
@@ -52,8 +52,8 @@ object ParallelCountChange {
   type Threshold = (Int, List[Int]) => Boolean
 
   /** In parallel, counts the number of ways change can be made from the
-   *  specified list of coins for the specified amount of money.
-   */
+    * specified list of coins for the specified amount of money.
+    */
   def parCountChange(money: Int, coins: List[Int], threshold: Threshold): Int = {
     ???
   }
