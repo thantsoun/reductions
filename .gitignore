@@ -1,0 +1,60 @@
+# Compiled source #
+###################
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# Packages #
+############
+# it's better to unpack these files and commit the raw source
+# git has its own built in compression methods
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+
+# Logs #
+########
+#*.log
+#logs
+
+# Test folders#
+###############
+tmPacketArchive
+tmPacketStagingArea
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+ 
+# Jenkins, Eclipse, Maven ... generated files #
+######################
+.repository
+.settings
+.project
+.classpath
+*~
+*/*~
+*.versionsBackup
+*/*.versionsBackup
+target
+*.iml
+*/*.iml
+*.ipr
+*/*.ipr
+.idea/*
+.idea
+/.idea/
+*/.idea
