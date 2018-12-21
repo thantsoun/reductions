@@ -1,7 +1,7 @@
 package reductions
 
-import org.scalameter._
 import common._
+import org.scalameter._
 
 object ParallelCountChangeRunner {
 
@@ -9,12 +9,12 @@ object ParallelCountChangeRunner {
 
   @volatile var parResult = 0
 
-  val standardConfig = config(
+  val standardConfig: MeasureBuilder[Unit, Double] = config(
     Key.exec.minWarmupRuns -> 20,
     Key.exec.maxWarmupRuns -> 40,
     Key.exec.benchRuns -> 80,
     Key.verbose -> true
-  ) withWarmer (new Warmer.Default)
+  ) withWarmer new Warmer.Default
 
   def main(args: Array[String]): Unit = {
     val amount = 250
@@ -46,7 +46,9 @@ object ParallelCountChange {
     * coins for the specified amount of money.
     */
   def countChange(money: Int, coins: List[Int]): Int = {
-    ???
+    if (money == 0) 1
+    else if (money < 0 || coins.isEmpty) 0
+    else countChange(money, coins.tail) + countChange(money - coins.head, coins)
   }
 
   type Threshold = (Int, List[Int]) => Boolean
@@ -55,20 +57,24 @@ object ParallelCountChange {
     * specified list of coins for the specified amount of money.
     */
   def parCountChange(money: Int, coins: List[Int], threshold: Threshold): Int = {
-    ???
+    if(threshold(money, coins) || money <= 0 || coins.isEmpty) countChange(money, coins)
+    else {
+      val (v1, v2) = parallel(parCountChange(money - coins.head, coins, threshold), parCountChange(money, coins.tail, threshold))
+      v1 + v2
+    }
   }
 
   /** Threshold heuristic based on the starting money. */
   def moneyThreshold(startingMoney: Int): Threshold =
-    ???
+    (currentMoney: Int, _: List[Int]) => currentMoney <= startingMoney * 2 / 3
 
   /** Threshold heuristic based on the total number of initial coins. */
   def totalCoinsThreshold(totalCoins: Int): Threshold =
-    ???
+    (_: Int, currentCoins: List[Int]) => currentCoins.size <= totalCoins * 2 / 3
 
 
   /** Threshold heuristic based on the starting money and the initial list of coins. */
   def combinedThreshold(startingMoney: Int, allCoins: List[Int]): Threshold = {
-    ???
+    (currentMoney: Int, currentCoins: List[Int]) => currentMoney * currentCoins.length <= startingMoney * allCoins.length / 2
   }
 }
