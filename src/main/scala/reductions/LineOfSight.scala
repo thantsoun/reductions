@@ -43,7 +43,7 @@ object LineOfSight {
   }
 
   case class Node(left: Tree, right: Tree) extends Tree {
-    val maxPrevious = math.max(left.maxPrevious, right.maxPrevious)
+    val maxPrevious = max(left.maxPrevious, right.maxPrevious)
   }
 
   case class Leaf(from: Int, until: Int, maxPrevious: Float) extends Tree
@@ -51,11 +51,11 @@ object LineOfSight {
   /** Traverses the specified part of the array and returns the maximum angle.
     */
   def upsweepSequential(input: Array[Float], from: Int, until: Int): Float = {
-    var max = Float.MinValue
+    var maximum = 0f
     for (i <- from until until) {
-      max = math.max(input(i) / i, max)
+      maximum = max(input(i) / i, maximum)
     }
-    max
+    maximum
   }
 
   /** Traverses the part of the array starting at `from` and until `end`, and
@@ -83,9 +83,9 @@ object LineOfSight {
   def downsweepSequential(input: Array[Float], output: Array[Float],
                           startingAngle: Float, from: Int, until: Int): Unit = {
     if (from < until) {
-      output(from) = math.max(input(from) / from, startingAngle)
+      output(from) = max(input(from) / from, startingAngle)
       for (i <- from + 1 until until) {
-        output(i) = math.max(input(i) / i, output(i - 1))
+        output(i) = max(input(i) / i, output(i - 1))
       }
     }
   }
@@ -96,11 +96,11 @@ object LineOfSight {
     */
   def downsweep(input: Array[Float], output: Array[Float], startingAngle: Float, tree: Tree): Unit = tree match {
     case Leaf(from, to, _) => downsweepSequential(input, output, startingAngle, from, to)
-    case Node(left, right) => parallel(downsweep(input, output, startingAngle, left), downsweep(input, output, left.maxPrevious, right))
+    case Node(left, right) => parallel(downsweep(input, output, startingAngle, left), downsweep(input, output, max(left.maxPrevious, startingAngle), right))
   }
 
   /** Compute the line-of-sight in parallel. */
   def parLineOfSight(input: Array[Float], output: Array[Float], threshold: Int): Unit = {
-    downsweep(input, output, 1, upsweep(input, 1, input.length, threshold))
+    downsweep(input, output, 0, upsweep(input, 1, input.length, threshold))
   }
 }
